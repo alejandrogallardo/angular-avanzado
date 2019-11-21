@@ -4,6 +4,14 @@ Author: Wrappixel
 Email: niravjoshi87@gmail.com
 File: js
 */
+
+/**
+ * init_plugins
+ * Es una funcion personalizada para inicializar al momento de cargar el
+ * dashboard
+ */
+function init_plugins(){
+
 $(function() {
     "use strict";
     $(function() {
@@ -155,3 +163,9 @@ $(function() {
     });
 
 });
+
+
+
+
+
+}
