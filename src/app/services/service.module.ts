@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {  SettingsService, 
           SidebarService, 
           SharedService,
-          UsuarioService } from './service.index';
+          UsuarioService,
+          SubirArchivoService } from './service.index';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -12,7 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
     SettingsService,
     SidebarService,
     SharedService,
-    UsuarioService
+    UsuarioService,
+    SubirArchivoService
   ],
   imports: [
     CommonModule,
