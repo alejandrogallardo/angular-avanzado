@@ -13,3 +13,25 @@
 .foto-usuario-perfil {
     text-align: center;
 }
+
+.img-50 {
+    width: 50px;
+}
+
+.w70{
+    width: 70px;
+}
+
+.fondo-negro {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+
+.oculto {
+    display: none;
+}
