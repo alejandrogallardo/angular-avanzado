@@ -177,7 +177,7 @@ export class UsuarioService {
   }
 
   //------------------------
-  // Buscar Usuarios
+  // Borrar Usuarios
   //------------------------
   borrarUsuario( id: string ){
     let url = `${URL_SERVICIOS}/usuario/${id}`;
