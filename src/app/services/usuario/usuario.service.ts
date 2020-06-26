@@ -5,6 +5,8 @@ import { URL_SERVICIOS } from 'src/app/config/config';
 import Swal from 'sweetalert2'
 
 import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
 
@@ -15,6 +17,7 @@ export class UsuarioService {
 
   usuario: Usuario;
   token: string;
+  menu: any = [];
 
   constructor( public http: HttpClient,
               public router: Router,
@@ -32,30 +35,36 @@ export class UsuarioService {
     if ( localStorage.getItem('token') ) {
       this.token = localStorage.getItem('token');
       this.usuario = JSON.parse(localStorage.getItem('usuario'));
+      this.menu = JSON.parse(localStorage.getItem('menu'));
     }else {
       this.token = '';
       this.usuario = null;
+      this.menu = []; // en caso no existe se destruye
     }
   }
 
   //------------------------
   // Pendiente funcion guardarStorage
   //------------------------
-  guardarStorage( id: string, token: string, usuario: Usuario ){
+  guardarStorage( id: string, token: string, usuario: Usuario, menu: any ){
     localStorage.setItem('id', id);
     localStorage.setItem('token', token);
     localStorage.setItem('usuario', JSON.stringify(usuario));
+    localStorage.setItem('menu', JSON.stringify(menu));
   
     this.usuario = usuario;
     this.token = token;
+    this.menu = menu;
   }
   
   logout(){
     this.usuario = null;
     this.token = '';
+    this.menu = [];
 
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    localStorage.removeItem('menu');
     
     this.router.navigate(['/login']);
 
@@ -76,14 +85,22 @@ export class UsuarioService {
     let url = `${URL_SERVICIOS}/login`;
     return this.http.post( url, usuario )
       .pipe(map( ( resp: any ) => {
-        this.guardarStorage( resp.id, resp.token, resp.usuario );
+        this.guardarStorage( resp.id, resp.token, resp.usuario, resp.menu );
 
         // guardar recuerdame en localstogare, luego se crea funcion
         // localStorage.setItem('id', resp.id);
         // localStorage.setItem('token', resp.token);
         // localStorage.setItem('usuario', JSON.stringify(resp.id));
         return true;
-      }));
+      }),
+      catchError(err => {
+        console.log(err.status);
+        // add sweetalert
+        console.log(err.message);
+        return throwError(err.message)
+      })
+      );
+  
   }
 
   crearUsuario( usuario: Usuario ){
@@ -119,7 +136,7 @@ export class UsuarioService {
 
         if( usuario._id === this.usuario._id ){
           let usuarioDB: Usuario = resp.usuario;
-          this.guardarStorage( usuarioDB._id, this.token, usuarioDB);
+          this.guardarStorage( usuarioDB._id, this.token, usuarioDB, this.menu);
         }
 
         Swal.fire({
@@ -145,7 +162,7 @@ export class UsuarioService {
           title: 'Imagen Actualizada', 
           text: this.usuario.nombre, 
           icon: 'success'});
-          this.guardarStorage( id, this.token, this.usuario);
+          this.guardarStorage( id, this.token, this.usuario, this.menu);
 
       })
       .catch(error => {
